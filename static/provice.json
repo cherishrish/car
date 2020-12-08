@@ -1,0 +1,90 @@
+[
+  {
+    "proname": "北京市",
+    "proid": "1"
+  },
+  {
+    "proname": "天津市",
+    "proid": "2"
+  },
+  {
+    "proname": "上海市",
+    "proid": "3"
+  },
+  {
+    "proname": "重庆市",
+    "proid": "4"
+  },
+  {
+    "proname": "河北省",
+    "proid": "5"
+  },
+  {
+    "proname": "山西省",
+    "proid": "6"
+  },
+  {
+    "proname": "江苏省",
+    "proid": "11"
+  },
+  {
+    "proname": "浙江省",
+    "proid": "12"
+  },
+  {
+    "proname": "安徽省",
+    "proid": "13"
+  },
+  {
+    "proname": "福建省",
+    "proid": "14"
+  },
+  {
+    "proname": "江西省",
+    "proid": "15"
+  },
+  {
+    "proname": "山东省",
+    "proid": "16"
+  },
+  {
+    "proname": "河南省",
+    "proid": "17"
+  },
+  {
+    "proname": "湖北省",
+    "proid": "18"
+  },
+  {
+    "proname": "湖南省",
+    "proid": "19"
+  },
+  {
+    "proname": "广东省",
+    "proid": "20"
+  },
+  {
+    "proname": "四川省",
+    "proid": "22"
+  },
+  {
+    "proname": "贵州省",
+    "proid": "24"
+  },
+  {
+    "proname": "海南省",
+    "proid": "25"
+  },
+  {
+    "proname": "云南省",
+    "proid": "26"
+  },
+  {
+    "proname": "陕西省",
+    "proid": "28"
+  },
+  {
+    "proname": "广西壮族自治区",
+    "proid": "29"
+  }
+];
