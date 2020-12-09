@@ -1,7 +1,7 @@
 <template>
   <div class="bar">
     <div id = "d1">
-      <img id="back1" src="../../static/back.png" @click="goBack()">
+      <img v-if="index>0" id="back1" src="../../static/back.png" @click="goBack()">
       <div id="bar1"></div>
     </div>
     <div id="d2">
@@ -31,7 +31,8 @@
 
         mounted() {
             this.myChart = this.$echarts.init(document.getElementById('bar1'));
-            this.init();
+            this.drawPie(0);
+            this.index--;
             this.myChart.on('click',  (param)=> {
                 console.log(this.index);
                 if(this.index===0){
@@ -69,22 +70,6 @@
         },
 
         methods: {
-            init() {
-                this.$axios.get('/static/car.json').then(res => {
-                    for (var i = 0; i < res.data.length; i++) {
-                        var map = {
-                            "name": "",
-                            "value": 1
-                        };
-                        map.name = res.data[i].type;
-                        map.value = res.data[i].sale;
-                        this.objectData.data[i] = map;
-                    }
-                    console.log(this.objectData.data);
-                    this.drawBar()
-                })
-            },
-
             goBack(){
                 console.log(this.index);
                 if(this.index>0){
@@ -201,35 +186,41 @@
                         this.drawBar()
                     })
                 }else if(index===3){
+                    var url;
                     if(this.name==="宝骏E100"){
-                        this.$axios.get('/static/baojun1.json').then(res => {
-                            this.objectData.data=[];
-                            var prev = false;
-                            var curr = false;
-                            for (var i = 0; i < res.data.length; i++) {
-                                if(city===parseInt(res.data[i].city)){
-                                    prev=curr;
-                                    curr= true;
-                                    var map = {
-                                        "name": "",
-                                        "value": 1
-                                    };
-                                    map.name = res.data[i].company;
-                                    map.value = parseInt(Math.random()*(20-4+1)+4,10);
-                                    this.objectData.data.push(map)
-                                }else {
-                                    prev = curr;
-                                    curr = false;
-                                }
-                                if(prev&&!curr){
-                                    break;
-                                }
-
-                            }
-                            console.log(this.objectData.data);
-                            this.drawBar()
-                        })
+                        url='/static/baojun1.json'
+                    }else if(this.name==="宝骏E200"){
+                        url='/static/baojun2.json'
+                    }else {
+                        url='/static/hongguang.json'
                     }
+                    this.$axios.get(url).then(res => {
+                        this.objectData.data=[];
+                        var prev = false;
+                        var curr = false;
+                        for (var i = 0; i < res.data.length; i++) {
+                            if(city===parseInt(res.data[i].city)){
+                                prev=curr;
+                                curr= true;
+                                var map = {
+                                    "name": "",
+                                    "value": 1
+                                };
+                                map.name = res.data[i].company;
+                                map.value = parseInt(Math.random()*(20-4+1)+4,10);
+                                this.objectData.data.push(map)
+                            }else {
+                                prev = curr;
+                                curr = false;
+                            }
+                            if(prev&&!curr){
+                                break;
+                            }
+
+                        }
+                        console.log(this.objectData.data);
+                        this.drawBar()
+                    })
                 }
                 this.index++;
 
