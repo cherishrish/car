@@ -3,8 +3,13 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import echarts from 'echarts'
+import Axios from 'axios'
 
-Vue.config.productionTip = false
+
+Vue.config.productionTip = false;
+Vue.prototype.$axios = Axios;
+Vue.prototype.$echarts = echarts
 
 /* eslint-disable no-new */
 new Vue({
@@ -12,4 +17,4 @@ new Vue({
   router,
   components: { App },
   template: '<App/>'
-})
+});

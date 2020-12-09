@@ -37,12 +37,31 @@
                     selectionIndicator: false,
                 });
 
+                //在线天地图影像中文标记服务(经纬度)
+                var TDT_CIA_C="http://{s}.tianditu.gov.cn/cia_c/wmts?service=wmts&request=GetTile&version=1.0.0" +
+                    "&LAYER=cia&tileMatrixSet=c&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}" +
+                    "&style=default&format=tiles&tk=04a1ed562408cfab1fb4d6f6d3d5b77d";
+
                 this.viewer.scene.imageryLayers.addImageryProvider(
                     new Cesium.UrlTemplateImageryProvider({
                         url: 'world4/world4/{z}/{x}/{y}.jpg',
                         fileExtension: 'jpg'
                     })
                 );
+
+                this.viewer.imageryLayers.addImageryProvider(new Cesium.WebMapTileServiceImageryProvider({   //调用影响中文注记服务
+                    url: TDT_CIA_C,
+                    layer: "tdtImg_c",
+                    style: "default",
+                    format: "tiles",
+                    tileMatrixSetID: "c",
+                    subdomains: ["t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7"],
+                    tilingScheme: new Cesium.GeographicTilingScheme(),
+                    tileMatrixLabels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"],
+                    maximumLevel: 50,
+                    show: false
+                }));
+
 
                 this.viewer.camera.setView({
                     destination:Cesium.Cartesian3.fromDegrees(100.07,30.05,4000000),
