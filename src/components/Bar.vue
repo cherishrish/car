@@ -25,7 +25,29 @@
                 index:0,
                 name:'',
                 proId:1,
-                city:1
+                city:1,
+                position:[],
+                sales:[],
+                point:{
+                    log:100.07,
+                    lat:30.05,
+                    height:4000000
+                },
+                cPoint:{
+                    log:114.26735,
+                    lat:30.60943,
+                    height:2500000
+                },
+                proPoint:{
+                    log:0.0,
+                    lat:0.0,
+                    height:0.0
+                },
+                cityPoint:{
+                    log:0.0,
+                    lat:0.0,
+                    height:0.0
+                }
             }
         },
 
@@ -44,6 +66,9 @@
                             if(param.name===res.data[i].proname){
                                 this.proName = param.name;
                                 this.proId = parseInt(res.data[i].proid);
+                                this.proPoint.log = res.data[i].point.split(",")[0];
+                                this.proPoint.lat = res.data[i].point.split(",")[1];
+                                this.proPoint.height = res.data[i].point.split(",")[2];
                                 break;
                             }
 
@@ -57,6 +82,9 @@
                             if(param.name===res.data[i].cityName){
                                 this.cityName = param.name;
                                 this.city = parseInt(res.data[i].cityID);
+                                this.cityPoint.log = res.data[i].point.split(",")[0];
+                                this.cityPoint.lat = res.data[i].point.split(",")[1];
+                                this.cityPoint.height = res.data[i].point.split(",")[2];
                                 break;
                             }
 
@@ -71,10 +99,8 @@
 
         methods: {
             goBack(){
-                console.log(this.index);
                 if(this.index>0){
                     this.index--;
-                    console.log(this.index);
                     this.drawPie(this.index,this.proId,this.city);
                     this.index--;
                 }
@@ -151,12 +177,13 @@
                             map.value = res.data[i].sale;
                             this.objectData.data[i] = map;
                         }
-                        console.log(this.objectData.data);
+                        this.$emit('bar-click',this.position,this.objectData,this.point,this.index);
                         this.drawBar()
                     })
                 }else if(index===1){
                     this.$axios.get('/static/province.json').then(res => {
                         this.objectData.data=[];
+                        this.position=[];
                         for (var i = 0; i < res.data.length; i++) {
                             var map = {
                                 "name": "",
@@ -165,12 +192,21 @@
                             map.name = res.data[i].proname;
                             map.value = parseInt(Math.random()*(2000-1000+1)+1000,10);
                             this.objectData.data[i] = map;
+                            var point = {
+                                "log": 0.0,
+                                "lat": 0.0
+                            };
+                            point.log = res.data[i].point.split(",")[0];
+                            point.lat = res.data[i].point.split(",")[1];
+                            this.position.push(point);
                         }
+                        this.$emit('bar-click',this.position,this.objectData,this.cPoint,this.index);
                         this.drawBar()
                     })
                 }else if(index===2){
                     this.$axios.get('/static/city.json').then(res => {
                         this.objectData.data=[];
+                        this.position=[];
                         for (var i = 0; i < res.data.length; i++) {
                             if(proId===parseInt(res.data[i].proID)){
                                 var map = {
@@ -179,10 +215,17 @@
                                 };
                                 map.name = res.data[i].cityName;
                                 map.value = parseInt(Math.random()*(200-100+1)+100,10);
-                                this.objectData.data.push(map)
+                                this.objectData.data.push(map);
+                                var point = {
+                                    "log": 0.0,
+                                    "lat": 0.0
+                                };
+                                point.log = res.data[i].point.split(",")[0];
+                                point.lat = res.data[i].point.split(",")[1];
+                                this.position.push(point);
                             }
                         }
-                        console.log(this.objectData.data);
+                        this.$emit('bar-click',this.position,this.objectData,this.proPoint,this.index);
                         this.drawBar()
                     })
                 }else if(index===3){
@@ -196,6 +239,7 @@
                     }
                     this.$axios.get(url).then(res => {
                         this.objectData.data=[];
+                        this.position=[];
                         var prev = false;
                         var curr = false;
                         for (var i = 0; i < res.data.length; i++) {
@@ -208,7 +252,14 @@
                                 };
                                 map.name = res.data[i].company;
                                 map.value = parseInt(Math.random()*(20-4+1)+4,10);
-                                this.objectData.data.push(map)
+                                this.objectData.data.push(map);
+                                var point = {
+                                    "log": 0.0,
+                                    "lat": 0.0
+                                };
+                                point.log = res.data[i].point.split(",")[0];
+                                point.lat = res.data[i].point.split(",")[1];
+                                this.position.push(point);
                             }else {
                                 prev = curr;
                                 curr = false;
@@ -218,12 +269,12 @@
                             }
 
                         }
-                        console.log(this.objectData.data);
+                        this.$emit('bar-click',this.position,this.objectData,this.cityPoint,this.index);
                         this.drawBar()
                     })
                 }
+                console.log(index);
                 this.index++;
-
             }
 
         }
