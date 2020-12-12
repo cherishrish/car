@@ -208,7 +208,6 @@
 
             drawPie(index,proId,city){
                 if(index===0){
-                    //this.getData(index,'/static/car.json',2000,1000)
                     this.$axios.get('/static/car.json').then(res => {
                         this.objectData.data=[];
                         for (var i = 0; i < res.data.length; i++) {
@@ -316,7 +315,6 @@
                         this.drawBar()
                     })
                 }
-                console.log(index);
                 this.index++;
             }
 
