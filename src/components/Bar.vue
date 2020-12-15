@@ -20,6 +20,7 @@
                     data: []
                 },
                 myChart: '',
+                myChart2:'',
                 back1:'',
                 proName:'',
                 cityName:'',
@@ -56,6 +57,7 @@
 
         mounted() {
             this.myChart = this.$echarts.init(document.getElementById('bar1'));
+            this.myChart2 = this.$echarts.init(document.getElementById('bar2'));
             this.drawPie(0);
             this.index--;
             this.myChart.on('click',  (param)=> {
@@ -174,7 +176,145 @@
                         }
                     ]
                 });
-
+                //提取name
+                var myChart2BarName = this.objectData.data;
+                var BarName = [];
+                var sum = 0;
+                //获取地区名
+                function getName(){
+                    for(var i = 0;i < myChart2BarName.length ; i++ ){
+                       BarName[i] = myChart2BarName[i].name;
+                       sum += myChart2BarName[i].value;
+                    }
+                    return BarName;
+                }
+                //获取总销售额
+                function getAllValue(){
+                  for(var i = 0;i < myChart2BarName.length ; i++ ){
+                    sum += myChart2BarName[i].value;
+                  }
+                  return sum;
+                }
+                //实现水平条形图显示
+                this.myChart2.setOption({
+                    tooltip: {//提示框，可以在全局也可以在
+                        trigger: 'axis',  //提示框的样式
+                        formatter: "{b}:{c}",
+                        color: '#000', //提示框的背景色
+                        textStyle: { //提示的字体样式
+                          color: "white",
+                        },
+                        axisPointer:{
+                          type:'none'
+                        }
+                    },
+                //调整Echart的位置
+                    grid:{
+                      left:'5%',
+                      right:'5%',
+                      bottom:'5%',
+                      top:'10%',
+                      containLabel: true,
+                    },
+                    backgroundColor:'rgba(20,28,52,0.5)',
+                    title:[{
+                        text:(this.index>0?this.name:'')+(this.index>1?this.proName:'全国')+(this.index>2&&this.proName!==this.cityName?this.cityName:'')+'销量条形图',
+                        left:'center'
+                    },
+                      {
+                        text:'销售总额：'+ getAllValue() +'辆',
+                        left:'center',
+                        top:'5%',
+                        textStyle:{
+                          color:'#FFAC50',
+                          fontSize:20,
+                        }
+                      }],
+                    xAxis:{
+                        show:false,//不显示横轴
+                        type:'value',
+                    },
+                    yAxis:[{
+                      //第一个y轴
+                        type:'category',
+                        inverse:true,
+                        //去掉y轴
+                        axisLine:{
+                          show:false,
+                        },
+                        //去掉刻度线
+                        axisTick: {
+                          show: false
+                        },
+                        splitLine: {
+                          show: false
+                        },
+                      axisLabel:{
+                        textStyle:{
+                          color:'#ffffff',
+                          fontSize:'12'
+                        },
+                      },
+                        data: getName()
+                      },
+                  //第二个y轴
+                  {
+                    type:'category',
+                    inverse: true,
+                    axisLine: 'none',
+                    axisTick: 'none',
+                    show:true,
+                    axisLabel:{
+                     textStyle:{
+                       color:'#ffffff',
+                       fontSize:'12'
+                     },
+                    },
+                    data: this.objectData.data
+                  }
+                ],
+                series:[{
+                  name:'销量',
+                  type: 'bar',
+                  stack: 'chart',
+                  silent: true,
+                  label: {
+                    // formatter: '{a|{b}\n{d}%}',
+                    //文字换行
+                    formatter(v) {
+                      let text = v.name + Math.round(v.percent) + '%'
+                      if (text.length <= 6) {
+                        return text;
+                      } else if (text.length > 6 && text.length <= 12) {
+                        return text = `${text.slice(0, 6)}\n${text.slice(6)}`
+                      } else if (text.length > 12 && text.length <= 18) {
+                        return text = `${text.slice(0, 6)}\n${text.slice(6, 12)}\n${text.slice(12)}`
+                      } else if (text.length > 18 && text.length <= 24) {
+                        return text = `${text.slice(0, 6)}\n${text.slice(6, 12)}\n${text.slice(12, 18)}\n${text.slice(18)}`
+                      } else if (text.length > 24) {
+                        return text = `${text.slice(0, 6)}\n${text.slice(6, 12)}\n${text.slice(12, 18)}\n${text.slice(18, 24)}\n${text.slice(24)}`
+                      }
+                    },
+                    // color: '#D1FBEF',
+                    position:'right',
+                    fontFamily: 'PingFangSC-Regular',
+                    fontSize: '12px',
+                  },
+                  itemStyle:{
+                    normal:{
+                      //柱子的颜色，一改就变成白色？
+                      color:['#00ffff','#00cfff','#006ced','#ffe000','#ffa800','#ff5b00','#ff3000'],
+                      barBorderRadius: 30,
+                    }
+                  },
+                  barWidth:5,//柱状图宽度
+                  //调整间距
+                  // barCategoryGap: '50%',
+                  // barGap:'80%',
+                  data: this.objectData.data
+                },
+                ]
+              });
             },
 
             getData(index,url,max,min){
@@ -361,6 +501,12 @@
     top: 50%;
     height: 50%;
     background: #22ee22;
+  }
+
+  .bar #bar2{
+    position: absolute;
+    width: 100%;
+    height: 100%;
   }
 
 </style>
