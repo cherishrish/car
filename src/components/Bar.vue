@@ -1,7 +1,7 @@
 <template>
   <div class="bar">
     <div id = "d1">
-      <img v-if="index>0" id="back1" src="../../static/back.png" @click="goBack()">
+      <img v-if="index>0" id="back1" src="../../static/back2.png" @click="goBack()">
       <div id="bar1"></div>
     </div>
     <div id="d2">
@@ -297,7 +297,7 @@
 
   .bar #back1{
     position: absolute;
-    right:5%;
+    left:5%;
   }
 
   .bar #bar1{
