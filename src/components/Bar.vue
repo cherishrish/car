@@ -3,6 +3,7 @@
     <div id = "d1">
       <img v-if="index>0" id="back1" src="../../static/back2.png" @click="goBack()">
       <div id="bar1"></div>
+      <div id="supplier" @click="supplier()" style="color: white;cursor: pointer">供应商:{{text}}</div>
     </div>
     <div id="d2">
       <div id="bar2"></div>
@@ -28,6 +29,8 @@
                 city:1,
                 position:[],
                 sales:[],
+                show:false,
+                text:"显示",
                 point:{
                     log:100.07,
                     lat:30.05,
@@ -106,6 +109,16 @@
                 }
             },
 
+            supplier(){
+                this.show=!this.show;
+                if(this.show){
+                    this.text="隐藏"
+                }else {
+                    this.text="显示"
+                }
+                this.$emit('chart-click',this.show);
+            },
+
             drawBar() {
                 this.myChart.setOption({
                     tooltip: {//提示框，可以在全局也可以在
@@ -161,6 +174,35 @@
                         }
                     ]
                 });
+
+            },
+
+            getData(index,url,max,min){
+                this.$axios.get(url).then(res => {
+                    this.objectData.data=[];
+                    this.position=[];
+                    for (var i = 0; i < res.data.length; i++) {
+                        var map = {
+                            "name": "",
+                            "value": 1
+                        };
+                        map.name = res.data[i].proname;
+                        map.value = parseInt(Math.random()*(max-min+1)+min,10);
+                        this.objectData.data[i] = map;
+
+                        if(index>0){
+                            var point = {
+                                "log": 0.0,
+                                "lat": 0.0
+                            };
+                            point.log = res.data[i].point.split(",")[0];
+                            point.lat = res.data[i].point.split(",")[1];
+                            this.position.push(point);
+                        }
+                    }
+                    this.$emit('bar-click',this.position,this.objectData,this.cPoint,this.index);
+                    this.drawBar()
+                })
 
             },
 
@@ -273,7 +315,6 @@
                         this.drawBar()
                     })
                 }
-                console.log(index);
                 this.index++;
             }
 
@@ -306,6 +347,12 @@
     top:9%;
     height: 100%;
     background: #003da8;
+  }
+
+  .bar #supplier{
+    position: absolute;
+    bottom:1%;
+    right:1%;
   }
 
   .bar #d2 {
