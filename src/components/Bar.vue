@@ -1,10 +1,19 @@
 <template>
   <div class="bar">
-    <div id = "d1">
+<!--    加上边框样式-->
+    <div id = "d1" class="horn">
+      <div class="lt"></div>
+      <div class="rt"></div>
+      <div class="lb"></div>
+      <div class="rb"></div>
       <img v-if="index>0" id="back1" src="../../static/back.png" @click="goBack()">
       <div id="bar1"></div>
     </div>
-    <div id="d2">
+    <div id="d2" class="horn">
+      <div class="lt"></div>
+      <div class="rt"></div>
+      <div class="lb"></div>
+      <div class="rb"></div>
       <div id="bar2"></div>
     </div>
   </div>
@@ -19,6 +28,7 @@
                     data: []
                 },
                 myChart: '',
+                myChart2:'',
                 back1:'',
                 proName:'',
                 cityName:'',
@@ -53,6 +63,7 @@
 
         mounted() {
             this.myChart = this.$echarts.init(document.getElementById('bar1'));
+            this.myChart2 = this.$echarts.init(document.getElementById('bar2'));
             this.drawPie(0);
             this.index--;
             this.myChart.on('click',  (param)=> {
@@ -113,7 +124,7 @@
                         formatter: "{b}: {c} ({d}%)",
                         color: '#000', //提示框的背景色
                         textStyle: { //提示的字体样式
-                            color: "black",
+                            color: "white",
                         }
                     },
                     title:{
@@ -146,7 +157,7 @@
                                 align:'left',
                                 borderWidth: 1,
                                 borderRadius: 4,
-                                color: '#D1FBEF',
+                                // color: '#D1FBEF',
                                 fontFamily: 'PingFangSC-Regular',
                                 fontSize: '12px',
                                 rich: {
@@ -161,6 +172,110 @@
                         }
                     ]
                 });
+              //实现水平柱状图显示
+              this.myChart2.setOption({
+                tooltip: {//提示框，可以在全局也可以在
+                  trigger: 'axis',  //提示框的样式
+                  formatter: "{b}:{c}",
+                  color: '#000', //提示框的背景色
+                  textStyle: { //提示的字体样式
+                    color: "black",
+                  },
+                  axisPointer:{
+                    type:'none'
+                  }
+                },
+                // legend:{
+                //   top:"10%",
+                //   data:['2019','2020','2021']
+                // },
+                grid:{
+                  left:100
+                },
+                title:{
+                  text:(this.index>0?this.name:'')+(this.index>1?this.proName:'全国')+(this.index>2&&this.proName!==this.cityName?this.cityName:'')+'销量分布图',
+                  left:'center'
+                },
+                xAxis:{
+                  show:false,//不显示横轴
+                  type:'value',
+                },
+                yAxis:{
+                  name:'车型',
+                  type:'category',
+                  inverse:true,
+                  // data:['宏光','宝骏E100','宝骏E200'],
+                  //去掉y轴
+                  axisLine:{
+                    show:false,
+                  },
+                  //去掉刻度线
+                  axisTick: {
+                    show: false
+                  },
+                  splitLine: {
+                    show: false
+                  },
+                  //在柱状图上显示销量
+                  axisLabel:{
+                    rich:{
+                      value:{
+                        lineHeight:10,
+                        align:'center'
+                      }
+                    }
+                  }
+                },
+                series:[{
+                  name:'销量',
+                  type: 'bar',
+                  stack: 'chart',
+                  silent: true,
+                  label: {
+                    // formatter: '{a|{b}\n{d}%}',
+                    //文字换行
+                    formatter(v) {
+                      let text = v.name + Math.round(v.percent) + '%'
+                      if (text.length <= 6) {
+                        return text;
+                      } else if (text.length > 6 && text.length <= 12) {
+                        return text = `${text.slice(0, 6)}\n${text.slice(6)}`
+                      } else if (text.length > 12 && text.length <= 18) {
+                        return text = `${text.slice(0, 6)}\n${text.slice(6, 12)}\n${text.slice(12)}`
+                      } else if (text.length > 18 && text.length <= 24) {
+                        return text = `${text.slice(0, 6)}\n${text.slice(6, 12)}\n${text.slice(12, 18)}\n${text.slice(18)}`
+                      } else if (text.length > 24) {
+                        return text = `${text.slice(0, 6)}\n${text.slice(6, 12)}\n${text.slice(12, 18)}\n${text.slice(18, 24)}\n${text.slice(24)}`
+                      }
+                    },
+                    // color: '#D1FBEF',
+                    position:'right',
+                    fontFamily: 'PingFangSC-Regular',
+                    fontSize: '12px',
+                  },
+                  // itemStyle:{
+                  //   normal:{
+                  //     color:'#f3f3f6'
+                  //   }
+                  // },
+                  barWidth:5,//柱状图宽度
+                  // barGap:'-100%',
+                  data: this.objectData.data
+                },
+                  // {
+                  //   name:'2020',
+                  //   type:'bar',
+                  //   data:['200','500','700'],
+                  //   barWidth:10,//柱状图宽度
+                  // },
+                  // {
+                  //   name:'2021',
+                  //   type:'bar',
+                  //   data:['900','1000','800'],
+                  //   barWidth:10,//柱状图宽度
+                  // },
+                  ]
+              });
 
             },
 
@@ -285,14 +400,15 @@
 <style scoped>
   .bar {
     position: relative;
-
+    background: rgba(11,137,250,0.7);
   }
 
   .bar #d1 {
     position: absolute;
-    width: 100%;
-    height: 50%;
-    background: #003da8;
+    width: 98%;
+    height: 30%;
+    /*background: #003da8;*/
+    top:10%;
   }
 
   .bar #back1{
@@ -300,20 +416,66 @@
     right:5%;
   }
 
-  .bar #bar1{
+ .bar #bar1{
     position: absolute;
     width: 100%;
-    top:9%;
+    /*top:9%;*/
     height: 100%;
-    background: #003da8;
+    /*background: #003da8;*/
   }
 
   .bar #d2 {
     position: absolute;
+    width: 98%;
+    top: 41%;
+    height: 30%;
+    /*background: rgba(0,0,255,0.1);*/
+  }
+
+  .bar #bar2{
+    position: absolute;
     width: 100%;
-    top: 50%;
-    height: 50%;
-    background: #22ee22;
+    height: 100%;
+    /*background: rgba(0,0,255,0.1);*/
+  }
+  .horn{
+    position: absolute;
+    border: 1px solid #00d3e7;
+    bottom: 280px;
+  }
+
+  .horn>div{
+    width: 10px;
+    height: 10px;
+    position: absolute;
+  }
+
+  .horn .lt{
+    border-top: 2px solid #00d3e7;
+    border-left: 2px solid #00d3e7;
+    left: 0px;
+    top: 0px;
+  }
+
+  .horn .rt{
+    border-top: 2px solid #00d3e7;
+    border-right: 2px solid #00d3e7;
+    right: 0px;
+    top: 0px;
+  }
+
+  .horn .lb{
+    border-bottom: 2px solid #00d3e7;
+    border-left: 2px solid #00d3e7;
+    left: 0px;
+    bottom: 0px;
+  }
+
+  .horn .rb{
+    border-bottom: 2px solid #00d3e7;
+    border-right: 2px solid #00d3e7;
+    right: 0px;
+    bottom: 0px;
   }
 
 </style>

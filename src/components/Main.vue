@@ -130,7 +130,7 @@
                     var entity = this.viewer.entities.add({
                         position: new Cesium.Cartesian3.fromDegrees(position[i].log, position[i].lat),
                         billboard: {
-                            image: '../../static/marker.png',
+                            image: '../../static/marker3.png',
                             scale: 1,
                             horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                             verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
@@ -162,7 +162,9 @@
 <style scoped>
   .main {
     height: calc(100vh - 20px);
-    position: relative
+    position: relative;
+    margin: 0;
+    padding: 0;
   }
 
   .main #bar {
