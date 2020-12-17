@@ -12,6 +12,8 @@
 </template>
 
 <script>
+    //解决 echarts undefined问题
+    import echarts from 'echarts'
     export default {
         name: "Bar",
         data() {
@@ -128,7 +130,7 @@
                         formatter: "{b}: {c} ({d}%)",
                         color: '#000', //提示框的背景色
                         textStyle: { //提示的字体样式
-                            color: "black",
+                            color: "white",
                         }
                     },
                     title:{
@@ -139,7 +141,9 @@
                         {
                             name: '访问来源',
                             type: 'pie', //环形图的type和饼图相同
-                            radius: ['40%', '60%'],//饼图的半径，第一个为内半径，第二个为外半径
+                            center:['50%', '50%'],
+                            radius: ['50%', '60%'],//饼图的半径，第一个为内半径，第二个为外半径
+                            // hoverAnimation:false,//取消鼠标点击动画
                             // color: ['#D1FBEF', '#F9D858', '#4CD0DD', '#DF86F0', '#F5A7C1'],
                             label: {
                                 // formatter: '{a|{b}\n{d}%}',
@@ -171,12 +175,25 @@
                                         align: 'center'
                                     }
                                 }
-                            },  //提示文字
+                            },
+                          //提示文字，折线的大小
+                          itemStyle:{
+                              normal:{
+                                labelLine:{
+                                  length:10,
+                                  length2:20,
+                                  show:true,
+                                  color:'#00ffff',
+                                  borderColor:'red',
+                                  shadowColor:'blue'
+                                }
+                              }
+                          },
                             data: this.objectData.data
                         }
                     ]
                 });
-                //提取name
+                //提取数据列表中的地区名
                 var myChart2BarName = this.objectData.data;
                 var BarName = [];
                 var sum = 0;
@@ -184,7 +201,6 @@
                 function getName(){
                     for(var i = 0;i < myChart2BarName.length ; i++ ){
                        BarName[i] = myChart2BarName[i].name;
-                       sum += myChart2BarName[i].value;
                     }
                     return BarName;
                 }
@@ -195,6 +211,9 @@
                   }
                   return sum;
                 }
+                //横向条形图颜色列表
+                // var colorList = ['#00ffff','#00cfff','#006ced','#ffe000','#ffa800','#ff5b00','#ff3000','#D7C046','#00ffff','#00cfff','#006ced','#ffe000','#ffa800','#ff5b00','#ff3000','#D7C046'
+                // ,'#00ffff','#00cfff','#006ced','#ffe000','#ffa800','#ff5b00','#ff3000','#D7C046'];
                 //实现水平条形图显示
                 this.myChart2.setOption({
                     tooltip: {//提示框，可以在全局也可以在
@@ -216,7 +235,7 @@
                       top:'10%',
                       containLabel: true,
                     },
-                    backgroundColor:'rgba(20,28,52,0.5)',
+                    backgroundColor:'rgba(0,0,255,0.5)',
                     title:[{
                         text:(this.index>0?this.name:'')+(this.index>1?this.proName:'全国')+(this.index>2&&this.proName!==this.cityName?this.cityName:'')+'销量条形图',
                         left:'center'
@@ -226,7 +245,7 @@
                         left:'center',
                         top:'5%',
                         textStyle:{
-                          color:'#FFAC50',
+                          color:'#FFFFFF',
                           fontSize:20,
                         }
                       }],
@@ -249,12 +268,12 @@
                         splitLine: {
                           show: false
                         },
-                      axisLabel:{
-                        textStyle:{
-                          color:'#ffffff',
-                          fontSize:'12'
+                        axisLabel:{
+                            textStyle:{
+                            color:'#ffffff',
+                            fontSize:'12'
+                          },
                         },
-                      },
                         data: getName()
                       },
                   //第二个y轴
@@ -302,12 +321,55 @@
                   },
                   itemStyle:{
                     normal:{
-                      //柱子的颜色，一改就变成白色？
-                      color:['#00ffff','#00cfff','#006ced','#ffe000','#ffa800','#ff5b00','#ff3000'],
+                      // 不同柱子不同颜色且颜色渐变
+                      color:function(params){
+                        var colorList = [
+                          ['#0679e3', '#90c1fc'],
+                          ['#07b8d9', '#86e9fc'],
+                          ["#E56E6E", "#EFA4A4"],
+                          ["#FEB763", "#F9CF9E"],
+                          ["#00C0DD", "#00C0DD"],
+                          ["#23C83E", "#9BF194"],
+                          ["#1AA291", "#1AA291"],
+                          ["#4186EC", "#3AB3FB"],
+                          ['#3d97ed', '#62c4db'],
+                          ['#0679e3', '#90c1fc'],
+                          ['#07b8d9', '#86e9fc'],
+                          ["#E56E6E", "#EFA4A4"],
+                          ["#FEB763", "#F9CF9E"],
+                          ["#00C0DD", "#00C0DD"],
+                          ["#23C83E", "#9BF194"],
+                          ["#1AA291", "#1AA291"],
+                          ["#4186EC", "#3AB3FB"],
+                          ['#3d97ed', '#62c4db'],
+                          ['#0679e3', '#90c1fc'],
+                          ['#07b8d9', '#86e9fc'],
+                          ["#E56E6E", "#EFA4A4"],
+                          ["#FEB763", "#F9CF9E"],
+                          ["#00C0DD", "#00C0DD"],
+                          ["#23C83E", "#9BF194"],
+                          ["#1AA291", "#1AA291"],
+                          ["#4186EC", "#3AB3FB"],
+                          ['#3d97ed', '#62c4db'],
+                        ];
+                        var _this = this;
+                        var index = params.dataIndex;
+                        return {
+                          colorStops:[
+                              {
+                                offset:0,//颜色开始的位置
+                                color:colorList[index][0]},//0%处的颜色
+                              {
+                                offset: 1,//颜色结束的位置
+                                color:colorList[index][1]//100%处的颜色
+                              }
+                              ]
+                        }
+                      },
                       barBorderRadius: 30,
                     }
                   },
-                  barWidth:5,//柱状图宽度
+                  barWidth:8,//柱状图宽度
                   //调整间距
                   // barCategoryGap: '50%',
                   // barGap:'80%',
