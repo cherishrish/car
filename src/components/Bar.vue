@@ -1,26 +1,12 @@
 <template>
   <div class="bar">
-      <div id = "d1" class="horn">
-        <div class="lt"></div>
-        <div class="rt"></div>
-        <div class="lb"></div>
-        <div class="rb"></div>
+      <div id = "d1">
       <img v-if="index>0" id="back1" src="../../static/back5.png" @click="goBack()">
       <div id="bar1"></div>
       <div id="supplier" @click="supplier()" style="color: white;cursor: pointer">供应商:{{text}}</div>
     </div>
-    <div id="d2" class="horn">
-      <div class="lt"></div>
-      <div class="rt"></div>
-      <div class="lb"></div>
-      <div class="rb"></div>
+    <div id="d2">
       <div id="bar2"></div>
-    </div>
-    <div id="d3" class="horn">
-      <div class="lt"></div>
-      <div class="rt"></div>
-      <div class="lb"></div>
-      <div class="rb"></div>
     </div>
   </div>
 </template>
@@ -535,9 +521,8 @@
 
   .bar #d1 {
     position: absolute;
-    width: 98%;
-    height: 30%;
-    top: 10%;
+    width: 100%;
+    height: 50%;
     background: #003da8;
   }
 
@@ -550,24 +535,22 @@
   .bar #bar1{
     position: absolute;
     width: 100%;
-    /*top:9%;*/
+    top:9%;
     height: 100%;
     background: #003da8;
   }
 
   .bar #supplier{
     position: absolute;
-    width: 20%;
-    height: 10%;
     bottom:1%;
     right:1%;
   }
 
   .bar #d2 {
     position: absolute;
-    width: 98%;
-    top: 41%;
-    height: 30%;
+    top: 50%;
+    width: 100%;
+    height: 50%;
     background: #22ee22;
   }
 
