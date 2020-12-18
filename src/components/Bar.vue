@@ -1,19 +1,31 @@
 <template>
   <div class="bar">
-    <div id = "d1">
-      <img v-if="index>0" id="back1" src="../../static/back2.png" @click="goBack()">
+      <div id = "d1" class="horn">
+        <div class="lt"></div>
+        <div class="rt"></div>
+        <div class="lb"></div>
+        <div class="rb"></div>
+      <img v-if="index>0" id="back1" src="../../static/back5.png" @click="goBack()">
       <div id="bar1"></div>
       <div id="supplier" @click="supplier()" style="color: white;cursor: pointer">供应商:{{text}}</div>
     </div>
-    <div id="d2">
+    <div id="d2" class="horn">
+      <div class="lt"></div>
+      <div class="rt"></div>
+      <div class="lb"></div>
+      <div class="rb"></div>
       <div id="bar2"></div>
+    </div>
+    <div id="d3" class="horn">
+      <div class="lt"></div>
+      <div class="rt"></div>
+      <div class="lb"></div>
+      <div class="rb"></div>
     </div>
   </div>
 </template>
 
 <script>
-    //解决 echarts undefined问题
-    import echarts from 'echarts'
     export default {
         name: "Bar",
         data() {
@@ -125,6 +137,7 @@
 
             drawBar() {
                 this.myChart.setOption({
+                    backgroundColor:'#003da8',//为了间隔设置底色
                     tooltip: {//提示框，可以在全局也可以在
                         trigger: 'item',  //提示框的样式
                         formatter: "{b}: {c} ({d}%)",
@@ -163,7 +176,6 @@
                                     }
                                 },
                                 align:'left',
-                                borderWidth: 1,
                                 borderRadius: 4,
                                 color: '#D1FBEF',
                                 fontFamily: 'PingFangSC-Regular',
@@ -177,17 +189,10 @@
                                 }
                             },
                           //提示文字，折线的大小
+                          //设置圆环之间的间隔，只要颜色一致即可
                           itemStyle:{
-                              normal:{
-                                labelLine:{
-                                  length:10,
-                                  length2:20,
-                                  show:true,
-                                  color:'#00ffff',
-                                  borderColor:'red',
-                                  shadowColor:'blue'
-                                }
-                              }
+                            borderWidth: 5,//设置间隔
+                            borderColor:'#003da8',
                           },
                             data: this.objectData.data
                         }
@@ -197,7 +202,6 @@
                 var myChart2BarName = this.objectData.data;
                 var BarName = [];
                 var sum = 0;
-                //获取地区名
                 function getName(){
                     for(var i = 0;i < myChart2BarName.length ; i++ ){
                        BarName[i] = myChart2BarName[i].name;
@@ -211,9 +215,6 @@
                   }
                   return sum;
                 }
-                //横向条形图颜色列表
-                // var colorList = ['#00ffff','#00cfff','#006ced','#ffe000','#ffa800','#ff5b00','#ff3000','#D7C046','#00ffff','#00cfff','#006ced','#ffe000','#ffa800','#ff5b00','#ff3000','#D7C046'
-                // ,'#00ffff','#00cfff','#006ced','#ffe000','#ffa800','#ff5b00','#ff3000','#D7C046'];
                 //实现水平条形图显示
                 this.myChart2.setOption({
                     tooltip: {//提示框，可以在全局也可以在
@@ -242,10 +243,11 @@
                     },
                       {
                         text:'销售总额：'+ getAllValue() +'辆',
-                        left:'center',
-                        top:'5%',
+                        left:'right',
+                        bottom:'2%',
+                        right:'5%',
                         textStyle:{
-                          color:'#FFFFFF',
+                          color:'blue',//文字颜色
                           fontSize:20,
                         }
                       }],
@@ -533,35 +535,39 @@
 
   .bar #d1 {
     position: absolute;
-    width: 100%;
-    height: 50%;
+    width: 98%;
+    height: 30%;
+    top: 10%;
     background: #003da8;
   }
 
   .bar #back1{
     position: absolute;
     left:5%;
+    top: 2%;
   }
 
   .bar #bar1{
     position: absolute;
     width: 100%;
-    top:9%;
+    /*top:9%;*/
     height: 100%;
     background: #003da8;
   }
 
   .bar #supplier{
     position: absolute;
+    width: 20%;
+    height: 10%;
     bottom:1%;
     right:1%;
   }
 
   .bar #d2 {
     position: absolute;
-    width: 100%;
-    top: 50%;
-    height: 50%;
+    width: 98%;
+    top: 41%;
+    height: 30%;
     background: #22ee22;
   }
 
@@ -569,6 +575,49 @@
     position: absolute;
     width: 100%;
     height: 100%;
+  }
+  /*添加边框样式*/
+  .bar #d3 {
+    position: absolute;
+    width: 98%;
+    top: 72%;
+    height: 30%;
+    background: rgba(11,137,250,0.7);
+  }
+
+  .horn{
+    position: absolute;
+    border: 1px solid #00d3e7;
+    bottom: 280px;
+  }
+  .horn>div{
+    width: 10px;
+    height: 10px;
+    position: absolute;
+  }
+  .horn .lt{
+    border-top: 2px solid #00d3e7;
+    border-left: 2px solid #00d3e7;
+    left: 0px;
+    top: 0px;
+  }
+  .horn .rt{
+    border-top: 2px solid #00d3e7;
+    border-right: 2px solid #00d3e7;
+    right: 0px;
+    top: 0px;
+  }
+  .horn .lb{
+    border-bottom: 2px solid #00d3e7;
+    border-left: 2px solid #00d3e7;
+    left: 0px;
+    bottom: 0px;
+  }
+  .horn .rb{
+    border-bottom: 2px solid #00d3e7;
+    border-right: 2px solid #00d3e7;
+    right: 0px;
+    bottom: 0px;
   }
 
 </style>
